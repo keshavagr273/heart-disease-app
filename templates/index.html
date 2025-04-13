@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Disease Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector("form");
+            const resultBox = document.querySelector(".prediction-result");
+
+            form.addEventListener("submit", async function (e) {
+                e.preventDefault();
+                const formData = new FormData(form);
+                const response = await fetch("/predict", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                const data = await response.json();
+                resultBox.innerHTML = `<h3 class="${data.status}">${data.message}</h3>`;
+                resultBox.scrollIntoView({ behavior: "smooth" });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Personalized Heart Disease Risk Assessment❤️</h1>
+
+
+            <p class="subtitle">
+                Enter your health details below to receive a personalized risk assessment for heart disease. This tool uses a
+                machine learning model trained on health data to provide insights.
+            </p>
+        </header>
+
+        <div class="card">
+            <div class="card-header">
+<!--                <div class="icon-heart">❤️</div>-->
+                <h2>Heart Disease Risk Predictor</h2>
+            </div>
+            <div class="card-content">
+                <p class="form-intro">Fill in the form below to assess your risk of heart disease</p>
+
+                <form method="POST" action="/predict">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="bmi">Body Mass Index (BMI)</label>
+                            <input type="number" step="any" id="bmi" name="BMI" placeholder="Enter your BMI" required>
+                            <span class="helper-text">Normal range: 18.5 - 24.9</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fruits">Daily Fruit Consumption</label>
+                            <select id="fruits" name="Fruits">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                            <span class="helper-text">Do you consume fruits daily?</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="genhlth">General Health</label>
+                            <select id="genhlth" name="GenHlth">
+                                <option value="1">Excellent</option>
+                                <option value="2">Very Good</option>
+                                <option value="3">Good</option>
+                                <option value="4">Fair</option>
+                                <option value="5">Poor</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="menthlth">Poor Mental Health Days (Last 30 days)</label>
+                            <input type="number" id="menthlth" name="MentHlth" min="0" max="30" value="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="physhlth">Poor Physical Health Days (Last 30 days)</label>
+                            <input type="number" id="physhlth" name="PhysHlth" min="0" max="30" value="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="age">Age Group</label>
+                            <select id="age" name="Age">
+                                <option value="1">18–24</option>
+                                <option value="2">25–29</option>
+                                <option value="3">30–34</option>
+                                <option value="4">35–39</option>
+                                <option value="5">40–44</option>
+                                <option value="6">45–49</option>
+                                <option value="7">50–54</option>
+                                <option value="8">55–59</option>
+                                <option value="9">60–64</option>
+                                <option value="10">65–69</option>
+                                <option value="11">70–74</option>
+                                <option value="12">75–79</option>
+                                <option value="13">80+</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="education">Education Level</label>
+                            <select id="education" name="Education">
+                                <option value="1">Never Attended</option>
+                                <option value="2">Elementary</option>
+                                <option value="3">Some High School</option>
+                                <option value="4">High School Graduate</option>
+                                <option value="5">Some College</option>
+                                <option value="6">College Graduate</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="income">Income Level</label>
+                            <select id="income" name="Income">
+                                <option value="1">Less than $10,000</option>
+                                <option value="2">$10,000 to < $15,000</option>
+                                <option value="3">$15,000 to < $20,000</option>
+                                <option value="4">$20,000 to < $25,000</option>
+                                <option value="5">$25,000 to < $35,000</option>
+                                <option value="6">$35,000 to < $50,000</option>
+                                <option value="7">$50,000 to < $75,000</option>
+                                <option value="8">$75,000 or more</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group submit-group">
+                        <input type="submit" value="📊 Analyze My Health Data" class="submit-button">
+                    </div>
+                </form>
+
+                <div class="prediction-result"></div>
+            </div>
+        </div>
+
+         <!-- About Section -->
+        <div class="about-section" id="about">
+            <h2>About This Tool🛠️</h2>
+            <div class="about-content">
+                <div class="about-card">
+                    <div class="about-card-header">
+                        <div class="about-icon">🔍</div>
+                        <h3>🧠Our Mission</h3>
+                    </div>
+                    <p>Our mission is to make heart health information accessible to everyone. This simple tool helps you understand your potential risk factors for heart disease based on your health data.</p>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card-header">
+                        <div class="about-icon">⚙️</div>
+                        <h3>🔬How It Works</h3>
+                    </div>
+                    <p>Our assessment analyzes key health factors including BMI, lifestyle choices, and overall health. The machine learning model was trained on health survey data to identify patterns related to heart disease risk.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Disclaimer: This tool provides an estimation only and should not replace professional medical advice.
+                Always consult with a healthcare professional.</p>
+            <p>© {{ year }} Heart Risk Insight App. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
